@@ -1,4 +1,6 @@
-newdrugsplasmincleavage1 <- read_csv("D:/newdrugsplasmincleavage1.csv")
+library(tidyverse)
+
+newdrugsplasmincleavage1 <- read_csv("Drugscreen_panel_II_badplasmineffect/newdrugsplasmincleavage1.csv")
 
 
 newdrughit1<- newdrugsplasmincleavage1 %>% as.data.frame() %>% 
