@@ -366,3 +366,40 @@ alldrugscreendata  %>%  vascr_subset(experiment="5",sampleid = c(109:112, 25, 26
 
 # Need to keep in mind the missing data problem, ie. only include data from full datasets in one graph. Can't select from different repeats. 
 # Makes things tricky.. 
+
+
+# n=2, high and low -------------------------------------------------------
+
+# dataframe highandlow just contains replicates 2 and 3, n=2 for drugscreen paper
+highandlow<- vascr_combine(screen2plotdata, screen3plotdata) %>% 
+  vascr_subset(time=c(-5,20))
+
+highandlow %>% vascr_summarise(level="summary") %>% vascr_plot_line() + facet_wrap(~Sample)
+
+# don't care about plasmin story so splitting the sample column into whether it's vehicle or plasmin, then filtering out plasmin
+
+library(stringr)
+
+
+highandlow %>% mutate(plasminorvehicle = word(highandlow$Sample, -1)) %>% filter(plasminorvehicle=="vehicle") %>% #make new column that contains the last word of the sample column
+  vascr_summarise(level="summary") %>% vascr_plot_line()+ geom_hline(yintercept=1, alpha=0.5, linetype=2) + facet_wrap(~Sample)
+
+
+#curiosity/ for thesis, just plasmin
+highandlow %>% mutate(plasminorvehicle = word(highandlow$Sample, -1)) %>% filter(plasminorvehicle=="plasmin") %>% 
+  vascr_summarise(level="summary") %>% vascr_plot_line()+ geom_hline(yintercept=1, alpha=0.5, linetype=2) + facet_wrap(~Sample)
+
+
+
+#would want to refactor so that each drug is grouped together, started to below but need to redo the ggplot mapping so a little bit complicated maybe
+
+facetedhighandlow<- highandlow %>% 
+  mutate(plasminorvehicle = word(highandlow$Sample, -1)) %>% 
+  mutate(drug = word(highandlow$Sample, -2)) %>% 
+  filter(plasminorvehicle=="vehicle") %>% 
+  vascr_summarise(level="summary") 
+
+
+
+vascr_plot_line()+ facet_wrap(~drug)
+facetedhighandlow

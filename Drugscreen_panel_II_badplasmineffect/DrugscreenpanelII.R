@@ -251,36 +251,29 @@ newpanelcombined  %>%  vascr_subset(sampleid = c(29,30), time=c(-4,20)) %>% vasc
   vascr_plot_line() 
 
 
-### testing if plasmin issues -------------------------------------
-
-plasmintestdata <- vascr_import("ECIS",
-                          raw = "ECIS_251207_MFT_1_CG_plasmintestplusextra.abp",
-                          model = "ECIS_251207_MFT_1_CG_plasmintestplusextra_RbA.csv", experiment = "exp1"
-)
-
-plasmintestkey <- tribble(
-  ~SampleID, ~Row, ~Column, ~Sample, #triplicate treatments
-  1, "F", "1 2 3",  "EJ's plasmin. Make up and frozen (one freeze thaw)",
-  2, "F", "4 5 6", "15uL of our plasmin. Made up and frozen (one freeze thaw)", 
-  3, "G", "1 2 3", "Our old plasmin. Has been through two subaliquoting since initial freeze (three freeze thaws)",
-  4, "G", "4 5 6", "Plasmin vehicle (everything is 0.5% water)", 
-  5, "H", "4 5 6", "Added all the leftover plasmins randomly")
-  
- 
+# just the vehicle drug baseline effect -----------------------------------
 
 
-plasmintestlabeled <- vascr:::vascr_apply_map(plasmintestdata, plasmintestkey)
 
-#plasmin plot
-plasmintestlabeled %>%
-  vascr_subset(unit = "Rb") %>%
-  vascr_zero_time(71.5658) %>%
-  vascr_normalise(-2, divide = TRUE) %>% vascr_subset(sampleid=c(1:5), time=c(-2,30)) %>%  vascr_resample_time(500) %>% vascr_summarise(level = "experiment") %>% 
-  vascr_plot_line()
+panelIbaseline <- newpanelcombined %>% vascr_subset(time=c(-5,20))
 
-#reference code
-newpanel2labeled %>%
-  vascr_zero_time(72.225) %>% 
-  vascr_normalise(-2, divide = TRUE)  %>%  
-  vascr_resample_time(500) %>% vascr_subset(unit="Rb", sampleid = c(31:34, 29,30), time=c(-4,48)) %>% vascr_summarise(level = "experiment") %>% 
-  vascr_plot_line()
+
+# don't care about plasmin story so splitting the sample column into whether it's vehicle or plasmin, then filtering out plasmin
+
+library(stringr)
+
+#make new column that contains the last word of the sample column
+panelIbaseline  %>% mutate(plasminorvehicle = word(panelIbaseline$Sample, -1)) %>% filter(plasminorvehicle=="vehicle") %>% 
+  vascr_summarise(level="experiment") %>% vascr_plot_line()+ geom_hline(yintercept=1, alpha=0.5, linetype=2) + facet_wrap(~Sample)
+
+unique(newpanelcombined$Sample)
+
+
+#big jump at treatment for one of the experiments, exclude out
+
+panelIbaseline  %>% mutate(plasminorvehicle = word(panelIbaseline$Sample, -1)) %>% 
+  filter(plasminorvehicle=="vehicle", Experiment!= "2 : exp2") %>% 
+  vascr_summarise(level="summmary") %>% 
+  vascr_plot_line()+ 
+  geom_hline(yintercept=1.04, alpha=0.5, linetype=2) + facet_wrap(~Sample)
+
