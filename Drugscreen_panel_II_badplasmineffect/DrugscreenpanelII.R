@@ -6,7 +6,7 @@ library(vascr)
 library(tidyverse)
 library(ggplot2)
 
-setwd("C:/Users/cgao801/OneDrive - The University of Auckland/1 PHD/2511A Drugscreen panel II")
+
 
 newpanel1 <- vascr_import("ECIS",
                                raw = "ECIS_251111_MFT_1_CG_drugscreenII_1.abp",
@@ -277,3 +277,5 @@ panelIbaseline  %>% mutate(plasminorvehicle = word(panelIbaseline$Sample, -1)) %
   vascr_plot_line()+ 
   geom_hline(yintercept=1.04, alpha=0.5, linetype=2) + facet_wrap(~Sample)
 
+
+# revisiting putting high and low concentrations on same 

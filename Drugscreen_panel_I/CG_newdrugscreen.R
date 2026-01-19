@@ -12,6 +12,8 @@ drugscreen1 <- vascr_import("ECIS",
                             model = "Drugscreen_panel_I/ECIS_250921_MFT_1_CG_drugscreen1_RbA.csv", experiment = "exp1"
 )
 
+
+
 screen1key <- tribble(
   ~SampleID, ~Row, ~Column, ~Sample, #triplicate treatments
   1, "A", "1 2 3",  "10nM rapamycin vehicle",
@@ -391,15 +393,76 @@ highandlow %>% mutate(plasminorvehicle = word(highandlow$Sample, -1)) %>% filter
 
 
 
-#would want to refactor so that each drug is grouped together, started to below but need to redo the ggplot mapping so a little bit complicated maybe
+#would want to wrangle so that each drug is grouped together, started to below but need to redo the ggplot mapping so a little bit complicated maybe
 
-facetedhighandlow<- highandlow %>% 
+sampleseparatedhighandlow<- highandlow %>% 
   mutate(plasminorvehicle = word(highandlow$Sample, -1)) %>% 
   mutate(drug = word(highandlow$Sample, -2)) %>% 
+  mutate(concentration = word(highandlow$Sample, 1)) %>% 
+  filter(plasminorvehicle=="vehicle") 
+  
+
+#summarising by drug and concentration
+summarisedhighandlow<- sampleseparatedhighandlow %>% 
+  group_by(Time, drug, concentration) %>% summarise(
+    mean=mean(Value), sd=sd(Value), n=n(), se=sd/sqrt(n))
+
+# ggplot
+ggplot(summarisedhighandlow, aes(x=Time, y=mean, color=concentration)) + 
+  geom_line() +   facet_wrap(~drug)
+  geom_ribbon(
+    data=summarisedhighandlow, aes(ymax=mean+se, ymin=mean-se, fill=concentration, alpha= 0.1))+
+  facet_wrap(~drug) # keeps doing something weird with the lines. Trying vascrsummarise
+  
+  
+placeholder<- highandlow %>% vascr_summarise(level="summary") 
+
+
+
+
+
+
+
+
+# plot
+
+test<- placeholder %>%  mutate(plasminorvehicle = word(placeholder$Sample, -1)) %>% 
+  mutate(drug = word(placeholder$Sample, -2)) %>% 
+  mutate(concentration = word(placeholder$Sample, 1)) %>% 
   filter(plasminorvehicle=="vehicle") %>% 
-  vascr_summarise(level="summary") 
+  replace_na(list(drug="vehicle"))
 
 
+
+
+#THIS CODE WORKS
+test %>% ggplot() +
+  geom_line(data= test, mapping= aes(x=Time, y=Value, color=concentration))+
+  geom_ribbon(data=test, mapping= aes(x= Time, ymax=max, ymin=min, fill=concentration), alpha=0.4)+
+  facet_wrap(~drug) 
+
+#make a 'vehicle only' dataframe so can add as a layer
+
+
+drugsnovehicle<- test %>% filter(drug!="vehicle")
+vehiclelayer<- test %>% filter(drug=="vehicle") %>% 
+  mutate(drug=NULL)
+
+ggplot()+
+  geom_line(data= vehiclelayer, aes(x=Time, y=Value), color="darkgrey")+
+  geom_ribbon(data=vehiclelayer, aes(x=Time, ymax=max, ymin=min), alpha=0.3)+
+  geom_line(data= drugsnovehicle, mapping= aes(x=Time, y=Value, color=concentration))+  
+  geom_ribbon(data=drugsnovehicle, mapping= aes(x= Time, ymax=max, ymin=min, fill=concentration), alpha=0.4)+
+  facet_wrap(~drug) + theme_bw()
+
+
+
+
+
+## vascrsummarise<- sampleseparatedhighandlow<- highandlow %>% 
+##  mutate(plasminorvehicle = word(highandlow$Sample, -1)) %>% 
+##  mutate(drug = word(highandlow$Sample, -2)) %>% 
+##  mutate(concentration = word(highandlow$Sample, 1)) %>% vascr_summarise(level="summary")
 
 vascr_plot_line()+ facet_wrap(~drug)
 facetedhighandlow
