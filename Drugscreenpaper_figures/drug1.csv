@@ -1,0 +1,33 @@
+Row,Column,Plasmin,Imapramine,Fingolimod,Marimastat,Fasudil,SCH79797,Ibuprofen,RAP,Vehicle
+A,1 2 3,320,10,,,,,,,Lo DMSO
+B,1 2 3,320,1,,,,,,,Lo DMSO
+C,1 2 3,0,10,,,,,,,Lo DMSO
+D,1 2 3,0,1,,,,,,,Lo DMSO
+E,1 2 3,320,,10,,,,,,Lo DMSO
+F,1 2 3,320,,1,,,,,,Lo DMSO
+G,1 2 3,0,,10,,,,,,Lo DMSO
+H,1 2 3,0,,1,,,,,,Lo DMSO
+A,4 5 6,320,,,10,,,,,Lo DMSO
+B,4 5 6,320,,,1,,,,,Lo DMSO
+C,4 5 6,0,,,10,,,,,Lo DMSO
+D,4 5 6,0,,,1,,,,,Lo DMSO
+E,4 5 6,320,,,,10,,,,Lo DMSO
+F,4 5 6,320,,,,1,,,,Lo DMSO
+G,4 5 6,0,,,,10,,,,Lo DMSO
+H,4 5 6,0,,,,1,,,,Lo DMSO
+A,7 8 9,320,,,,,10,,,Lo DMSO
+B,7 8 9,320,,,,,1,,,Lo DMSO
+C,7 8 9,0,,,,,10,,,Lo DMSO
+D,7 8 9,0,,,,,1,,,Lo DMSO
+E,7 8 9,320,,,,,,10,,Hi DMSO
+F,7 8 9,320,,,,,,1,,Hi DMSO
+G,7 8 9,0,,,,,,10,,Hi DMSO
+H,7 8 9,0,,,,,,1,,Hi DMSO
+A,10 11 12,320,,,,,,,10,Water
+B,10 11 12,320,,,,,,,1,Water
+C,10 11 12,0,,,,,,,10,Water
+D,10 11 12,0,,,,,,,1,Water
+E,10 11 12,320,,,,,,,,Water
+F,10 11 12,0,,,,,,,,Lo DMSO
+G,10 11 12,0,,,,,,,,High DMSO
+H,10 11 12,0,,,,,,,,Water

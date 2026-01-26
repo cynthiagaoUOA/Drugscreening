@@ -9,8 +9,8 @@ library(ggplot2)
 
 
 newpanel1 <- vascr_import("ECIS",
-                               raw = "ECIS_251111_MFT_1_CG_drugscreenII_1.abp",
-                               model = "ECIS_251111_MFT_1_CG_drugscreenII_1_RbA.csv", experiment = "exp1"
+                               raw = "Drugscreen_panel_II_badplasmineffect/ECIS_251111_MFT_1_CG_drugscreenII_1.abp",
+                               model = "Drugscreen_panel_II_badplasmineffect/ECIS_251111_MFT_1_CG_drugscreenII_1_RbA.csv", experiment = "exp1"
 )
 
 newpanel1key <- tribble(
@@ -20,11 +20,11 @@ newpanel1key <- tribble(
   3, "A", "7 8 9", "Low marimastat vehicle",
   4, "A", "10 11 12", "Low marimastat plasmin", 
   
-  5, "B", "1 2 3", "High valproic acid vehicle", 
-  6, "B", "4 5 6", "High valproic acid plasmin", 
-  7, "B", " 9", "Low valproic acid vehicle",  7, "H", "10", "Low valproic acid vehicle", 
+  5, "B", "1 2 3", "High valproicacid vehicle", 
+  6, "B", "4 5 6", "High valproicacid plasmin", 
+  7, "B", " 9", "Low valproicacid vehicle",  7, "H", "10", "Low valproicacid vehicle", 
   #B8 bad well, moved. #B7 looks weird as well, but post treatment. Have taken this out
-  8, "B", "10 11 12", "Low valproic acid plasmin", 
+  8, "B", "10 11 12", "Low valproicacid plasmin", 
   
   9, "C", "1 2 3", "High insulin vehicle", 
   10, "C", "4 6", "High insulin plasmin", # C5 was a bad well but forgot to move :/
@@ -51,8 +51,8 @@ newpanel1key <- tribble(
   27, "G", "7 8 9", "Low Butylphthalide vehicle",
   28, "G", "10 11 12", "Low Butylphthalide plasmin", 
   
-  29, "H", "4 5 6", "vehicle alone", 
-  30, "H", "7 8 9", "plasmin alone")
+  29, "H", "4 5 6", "vehicle", 
+  30, "H", "7 8 9", "plasmin")
 
 
 newpanel1labeled <- vascr:::vascr_apply_map(newpanel1, newpanel1key)
@@ -66,16 +66,16 @@ newpanel1plot <- newpanel1labeled %>%
 
 
 newpanel2 <- vascr_import("ECIS",
-                          raw = "ECIS_251121_MFT_CG_drugscreenII_3.abp",
-                          model = "ECIS_251121_MFT_CG_drugscreenII_3_RbA.csv", experiment = "exp2")
+                          raw = "Drugscreen_panel_II_badplasmineffect/ECIS_251121_MFT_CG_drugscreenII_3.abp",
+                          model = "Drugscreen_panel_II_badplasmineffect/ECIS_251121_MFT_CG_drugscreenII_3_RbA.csv", experiment = "exp2")
 
 newpanel2key <- tribble(
   ~SampleID, ~Row, ~Column, ~Sample, #triplicate treatments
   
-  5, "G", "10 11 12", "High valproic acid vehicle", 
-  6, "G", "7 8 9", "High valproic acid plasmin", 
-  7, "H", "10 11", "Low valproic acid vehicle",  #meant to be in H12 but think this is the one I forgot
-  8, "H", "7 8 9", "Low valproic acid plasmin", 
+  5, "G", "10 11 12", "High valproicacid vehicle", 
+  6, "G", "7 8 9", "High valproicacid plasmin", 
+  7, "H", "10 11", "Low valproicacid vehicle",  #meant to be in H12 but think this is the one I forgot
+  8, "H", "7 8 9", "Low valproicacid plasmin", 
   
   9, "C", "5 6 7", "High insulin vehicle", 
   10, "B", "1 2", "High insulin plasmin",   10, "E", "2", "High insulin plasmin", 
@@ -97,8 +97,8 @@ newpanel2key <- tribble(
   24, "F", "10 11 12", "Low Astaxanthin plasmin", # convinced that 23 and 24 wells were swapped, based on figure. 
   23, "F", "7 8 9", "Low Astaxanthin vehicle", 
   
-  29, "H", "4 5 6", "vehicle alone",   29, "G", "6", "vehicle alone", 
-  30, "E", "5 6", "plasmin alone",   30, "F", "6", "plasmin alone")
+  29, "H", "4 5 6", "vehicle",   29, "G", "6", "vehicle", 
+  30, "E", "5 6", "plasmin",   30, "F", "6", "plasmin")
 
 newpanel2labeled <- vascr:::vascr_apply_map(newpanel2, newpanel2key)
 
@@ -112,8 +112,8 @@ newpanelcombined<- vascr_combine(newpanel1plot, newpanel2plot) %>%
 
 
 newpanel3<- vascr_import("ECIS",
-                         raw = "ECIS_251130_MFT_1CG_drugscreenII_4.abp",
-                         model = "ECIS_251130_MFT_1CG_drugscreenII_4_RbA.csv", experiment = "exp3")
+                         raw = "Drugscreen_panel_II_badplasmineffect/ECIS_251130_MFT_1CG_drugscreenII_4.abp",
+                         model = "Drugscreen_panel_II_badplasmineffect/ECIS_251130_MFT_1CG_drugscreenII_4_RbA.csv", experiment = "exp3")
 
 
 
@@ -124,10 +124,10 @@ newpanel3key <- tribble(
   3, "F", "7 8 9", "Low marimastat vehicle",
   4, "F", "10 11 12", "Low marimastat plasmin", 
   
-  5, "B", "1 2 3", "High valproic acid vehicle", 
-  6, "B", "4 5 6", "High valproic acid plasmin", 
-  7, "B", "7 8 9", "Low valproic acid vehicle",
-  8, "B", "10 12", "Low valproic acid plasmin", #weird high outlier B11
+  5, "B", "1 2 3", "High valproicacid vehicle", 
+  6, "B", "4 5 6", "High valproicacid plasmin", 
+  7, "B", "7 8 9", "Low valproicacid vehicle",
+  8, "B", "10 12", "Low valproicacid plasmin", #weird high outlier B11
   
 
   13, "A", "2 3", "High edaravone2 vehicle", 13, "H", "1", "High edaravone2 vehicle", #bad well A1, moved. 
@@ -150,8 +150,8 @@ newpanel3key <- tribble(
   27, "D", "7 8 9", "Low Butylphthalide vehicle",
   28, "D", "10 11 12", "Low Butylphthalide plasmin", 
   
-  30, "H", "4 5 6", "plasmin alone", 
-  29, "H", "7 8 9", "vehicle alone",
+  30, "H", "4 5 6", "plasmin", 
+  29, "H", "7 8 9", "vehicle",
   
   31, "C", "1 2 3", "High licl vehicle",
   32, "C", "4 5 6", "High licl plasmin", 
@@ -176,7 +176,11 @@ newpanelcombined<- vascr_combine(newpanel1plot, newpanel2plot, newpanel3plot) %>
 ######## combined plots
 
 #valproic acid
-newpanelcombined  %>%  vascr_subset(sampleid = c(5:8, 29,30), time=c(-4,48)) %>% vascr_summarise(level = "summary") %>% 
+newpanelcombined  %>%  vascr_subset(sampleid = c(5:8, 29,30), time=c(-8,48)) %>% vascr_summarise(level = "summary") %>% 
+  vascr_plot_line() 
+
+#in vehicle
+newpanelcombined  %>%  vascr_subset(sampleid = c(5,7, 29), time=c(-4,48), experiment = c(1,3)) %>% vascr_summarise(level = "summary") %>% 
   vascr_plot_line() 
 
 newpanelcombined  %>%  vascr_subset(sampleid = c(5:8, 29,30), time=c(-4,18), experiment=3) %>% vascr_summarise(level = "well") %>% 
@@ -193,11 +197,20 @@ newpanelcombined  %>%  vascr_subset(sampleid = c(9:12, 29,30), time=c(-4,20)) %>
   vascr_plot_line()
 
 #astaxanthin
-newpanelcombined  %>%  vascr_subset(sampleid = c(21,22, 29,30), time=c(-4,20)) %>% vascr_summarise(level = "summary") %>% 
+highasta<- newpanelcombined  %>%  vascr_subset(sampleid = c(21,22, 29,30), time=c(-4,20)) %>% vascr_summarise(level = "summary") %>% 
   vascr_plot_line()
+lowasta<- newpanelcombined  %>%  vascr_subset(sampleid = c(23,24, 29,30), time=c(-4,20)) %>% vascr_summarise(level = "summary") %>% 
+  vascr_plot_line()
+
+
+library(patchwork)
+highasta + lowasta
+
 newpanelcombined  %>%  vascr_subset(sampleid = c(21:24, 29,30), time=c(-4,20)) %>% vascr_summarise(level = "summary") %>% ##ggplotly all
   vascr_plot_line() 
 
+
+#pl and vehicle
 newpanelcombined  %>%  vascr_subset(sampleid = c(29,30), time=c(-4,20)) %>% vascr_summarise(level = "summary") %>% ##ggplotly all
   vascr_plot_line() 
 
@@ -279,3 +292,6 @@ panelIbaseline  %>% mutate(plasminorvehicle = word(panelIbaseline$Sample, -1)) %
 
 
 # revisiting putting high and low concentrations on same 
+
+
+
