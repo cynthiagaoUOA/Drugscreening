@@ -17,8 +17,8 @@ library(ggplot2)
 
 #working directory in the drug combo folder
 drugcombo3 <- vascr_import("ECIS",
-                           raw = "ECIS_250729_MFT_1_CG_drugcombo3.abp",
-                           model = "ECIS_250729_MFT_1_CG_drugcombo3_RbA.csv", experiment = "exp3"
+                           raw = "Drugcombo_edav_fasudil_licl/ECIS_250729_MFT_1_CG_drugcombo3.abp",
+                           model = "Drugcombo_edav_fasudil_licl/ECIS_250729_MFT_1_CG_drugcombo3_RbA.csv", experiment = "exp3"
 )
 
 drugskey3 <- tribble(
@@ -55,7 +55,11 @@ drugs3 %>%
   vascr_summarise(level = "experiment") %>%
   vascr_plot_line()
 
-
+#edav alone
+drugs3 %>%
+  vascr_subset(sampleid = c(3,4,9,10)) %>%
+  vascr_summarise(level = "experiment") %>%
+  vascr_plot_line()
 
 
 # Previous runs -----------------------------------------------------------

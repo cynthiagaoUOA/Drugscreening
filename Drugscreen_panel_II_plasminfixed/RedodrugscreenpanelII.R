@@ -1,5 +1,9 @@
 # Full drugs panel II redo 1
 
+library(tidyverse)
+library(vascr)
+library(ggplot2)
+
 panelIIredo1<- vascr_import("ECIS", raw = "Drugscreen_panel_II_plasminfixed/ECIS_260120_MFT_1_CG_drughitsfullplasmin1.abp",
                             model ="Drugscreen_panel_II_plasminfixed/ECIS_260120_MFT_1_CG_drughitsfullplasmin1_RbAfixed.csv",
                             experiment= "Exp1")
@@ -55,6 +59,16 @@ panelIIredo1plot<- panelIIredo1labeled %>%
 #VPA
 panelIIredo1plot %>% vascr_subset(sampleid = c(1:4, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
 
+panelIIredo1plot %>% vascr_subset(sampleid = c(3,4, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line() +
+  xlim(-3,20) +ylim(0.5,1.3)+scale_color_manual(values=c("vehicle"= "#00BFC4",
+                                                        "plasmin"= "#F8766D",
+                                                        "high valproic acid vehicle"="#C77CFF",
+                                                        "high valproic acid plasmin"="#7CAE00"))+
+  scale_fill_manual(values = c( "vehicle"= "#00BFC4",
+                                "plasmin"= "#F8766D",
+                                "high valproic acid vehicle"="#C77CFF",
+                                "high valproic acid plasmin"="#7CAE00"))
+
 #butyl
 panelIIredo1plot %>% vascr_subset(sampleid = c(5:8, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
 
@@ -65,9 +79,25 @@ panelIIredo1plot %>% vascr_subset(sampleid = c(9:12, 30,31)) %>% vascr_summarise
 panelIIredo1plot %>% vascr_subset(sampleid = c(13:16, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
 
 #glutathione
-panelIIredo1plot %>% vascr_subset(sampleid = c(17:20, 32,33)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
+panelIIredo1plot %>% vascr_subset(sampleid = c(17:20, 31,33)) %>% vascr_summarise(level="experiment") %>% refactor()vascr_plot_line()
+
+
+glutfigrefactor<- panelIIredo1plot %>% vascr_subset(sampleid = c(17:20, 31,33)) %>% 
+  vascr_summarise(level="experiment") %>% 
+  
+ 
+
+panelIIredo1plot %>% vascr_subset(sampleid = c(19,20, 32,33)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()+
+  xlim(-3,20)+ylim(0.5,1.3) + scale_color_manual(values=c("glutathione vehicle"= "#00BFC4",
+                                                          "glutathione plasmin"= "#F8766D",
+                                                          "high glutathione vehicle"="#C77CFF",
+                                                          "high glutathione plasmin"="#7CAE00"))+
+  scale_fill_manual(values = c( "glutathione vehicle"= "#00BFC4",
+"glutathione plasmin"= "#F8766D",
+"high glutathione vehicle"="#C77CFF",
+"high glutathione plasmin"="#7CAE00"))
 
 
 
 #insulin
-panelIIredo1plot %>% vascr_subset(sampleid = c(21:24, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
+panelIIredo1plot %>% vascr_subset(sampleid = c(21:24, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line() 

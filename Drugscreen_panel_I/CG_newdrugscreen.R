@@ -360,6 +360,19 @@ alldrugscreendata  %>%  vascr_subset(experiment=c("4","5","2","3"),sampleid = c(
 alldrugscreendata  %>%  vascr_subset(experiment=c("4","5","2","3"),sampleid = c(28,30, 25, 26), time = c(-5,20)) %>% vascr_summarise(level = "experiment") %>%
   vascr_plot_line()+facet_wrap(~Experiment)
 
+alldrugscreendata  %>%  vascr_subset(experiment=c("2"),sampleid = c(29,27, 25, 26)) %>% 
+  vascr_summarise(level = "experiment") %>%
+  vascr_plot_line()+
+  ylim(0.5,1.3)+xlim(-3,20) +
+  xlim(-3,20)+ylim(0.5,1.3) + scale_color_manual(values=c("vehicle"= "#00BFC4",
+                                                          "320nM plasmin"= "#F8766D",
+                                                          "50uM edaravone vehicle"="#C77CFF",
+                                                          "50uM edaravone plasmin"="#7CAE00"))+
+  scale_fill_manual(values = c( "vehicle"= "#00BFC4",
+                                "320nM plasmin"= "#F8766D",
+                                "50uM edaravone vehicle"="#C77CFF",
+                                "50uM edaravone plasmin"="#7CAE00"))
+
 
 # catalase
 

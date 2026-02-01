@@ -164,7 +164,7 @@ facetedhighandlow
 
 
 # panelII bad plasmin -----------------------------------------------------
-
+# vehicle also a little bit weird
 
 newpanelcombined<- vascr_combine(newpanel1plot, newpanel3plot) %>% 
   vascr_subset(unit = "Rb") %>% 
@@ -210,3 +210,98 @@ ggplot()+
 newpanelcombined %>%  vascr_subset(time=c(-5,20), sampleid = c(29)) %>% 
   vascr_summarise(level="well") %>%
   vascr_plot_line()
+
+
+# panel II good plasmin good cells
+panelIIbetter1<- vascr_import("ECIS", raw = "Drugscreen_panel_II_plasminfixed/ECIS_260120_MFT_1_CG_drughitsfullplasmin1.abp",
+                            model ="Drugscreen_panel_II_plasminfixed/ECIS_260120_MFT_1_CG_drughitsfullplasmin1_RbAfixed.csv",
+                            experiment= "Exp1")
+#filename does not match experiment because I changed plans
+
+# panel II good plasmin good cells ----------------------------------------
+
+panelIIbetter1key = tribble(~SampleID, ~Row, ~ Column, ~ Sample,
+                            
+                            1, "A", "4 5 6", "low valproicacid vehicle",
+                            3, "C", "4 5 6", "high valproicacid vehicle",
+                            4, "D", "4 5 6", "high valproicacid plasmin",
+                            
+                            5, "E", "4 5 6", "low butylphthalide vehicle",
+                            6, "F", "4 5 6", "low butylphthalide plasmin",
+                            7, "G", "4 5 6", "high butylphthalide vehicle",
+                            8, "H", "4 5 6", "high butylphthalide plasmin",
+                            
+                            9, "A", "7 8 9", "low SB290572 vehicle",
+                            10, "B", "7 8 9", "low SB290572 plasmin",
+                            11, "C", "7 8 9", "high SB290572 vehicle",
+                            12, "D", "7 8 9", "high SB290572 plasmin",
+                            
+                            13, "E", "7 8 9", "low marimastat vehicle",
+                            14, "F", "7 8 9", "low marimastat plasmin",
+                            15, "G", "7 8 9", "high marimastat vehicle",
+                            16, "H", "7 8 9", "high marimastat plasmin",
+                            
+                            21, "E", "10 11 12", "low insulin vehicle",
+                            22, "F", "10 12", "low insulin plasmin", #F11 bad well - connection issue
+                            23, "G", "10 11 12", "high insulin vehicle",
+                            24, "H", "10 11 12", "high insulin plasmin",
+                            
+                            30, "A", "2 3", "vehicle", 30, "B", "2", "vehicle",
+                            31, "C", "2 3", "plasmin", 31, "B", "3", "plasmin",
+)
+
+panelIIbetter1labeled = vascr:::vascr_apply_map(panelIIbetter1, panelIIbetter1key)
+
+panelIIbetter1plot<- panelIIbetter1labeled %>% 
+  vascr_subset(unit = "Rb") %>% 
+  vascr_zero_time(64.146) %>% 
+  vascr_subset(time = c(-5, 24)) %>% 
+  vascr_normalise(-2, divide=TRUE) %>% 
+  vascr_resample_time(500) 
+
+gridplot(panelIIbetter1plot, samples=c(1:24), vehicle= vehicle)
+
+
+
+run1<- gridplotCG(drugdata= panelIIbetter1plot, samples= c(1:24, 30,31), vehicle= "vehicle") +ylim(0.5, 1.2)
+run1
+
+# Grid function -----------------------------------------------------------
+
+
+### Writing a function that will let me input arguments of dataframe, and of sampleID, and of vehicle dataframe, that will produce corresponding grid plot. 
+
+gridplotCG<- function(drugdata, samples, vehicle){ #argument sampleID as a vector
+  
+  library(vascr)
+  library(ggplot2)
+  #take drugdata and subset to select drugs of choice, which is specified by sampleID. 
+  
+  library(stringr) #lets me separate out column Sample by position of word
+  
+  noplasmin<- drugdata %>%  
+    mutate(plasminorvehicle = word(drugdata$Sample, -1)) %>% 
+    filter(plasminorvehicle=="vehicle") 
+  
+  summariseddrugdata<- noplasmin %>% filter(SampleID %in% samples) %>% vascr_summarise(level="experiment")
+  
+  dissecteddf<- summariseddrugdata %>% 
+    mutate(drug=word(summariseddrugdata$Sample, 2)) %>% #drug for vehicle will be NA
+    mutate(concentration = word(summariseddrugdata$Sample, 1))
+           
+  drugonlydf <- dissecteddf %>% drop_na() #vehicles all have NA. So this only leaves our drugs
+    
+  vehicleonlydf <- dissecteddf %>% filter(if_any(everything(), is.na))  ## vehicle only df which keeps the rows with NA. Ie. all the vehicle rows
+  vehicleonlydf$drug = NULL
+  
+  
+  associatedvehicle<- vehicleonlydf %>% filter(concentration == vehicle) # using argument, selecting the correct vehicle to put in background of plots
+  
+#plotting
+  ggplot()+
+    geom_line(data= associatedvehicle, aes(x=Time, y=Value), color="darkgrey")+  #base layer of vehicle line/ribbon
+    geom_ribbon(data=associatedvehicle, aes(x=Time, ymax=max, ymin=min), alpha=0.3)+
+    geom_line(data= drugonlydf, mapping= aes(x=Time, y=Value, color=concentration))+  
+    geom_ribbon(data=drugonlydf, mapping= aes(x= Time, ymax=max, ymin=min, fill=concentration), alpha=0.4)+
+    facet_wrap(~drug) + theme_bw()
+}

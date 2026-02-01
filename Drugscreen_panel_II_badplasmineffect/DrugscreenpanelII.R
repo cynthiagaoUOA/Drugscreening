@@ -62,8 +62,30 @@ newpanel1plot <- newpanel1labeled %>%
   vascr_zero_time(64.297) %>%
   vascr_normalise(-2, divide = TRUE) 
 
+### marsdn figure -asta
+newpanel1plot %>% vascr_subset(sampleid = c(21:22, 29:30)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()+
+  xlim(-3,20) +ylim(0.5,1.3)+scale_color_manual(values=c("vehicle"= "#00BFC4",
+                                                         "plasmin"= "#F8766D",
+                                                         "High Astaxanthin vehicle"="#C77CFF",
+                                                         "High Astaxanthin plasmin"="#7CAE00"))+
+  scale_fill_manual(values = c( "vehicle"= "#00BFC4",
+                                "plasmin"= "#F8766D",
+                                "High Astaxanthin vehicle"="#C77CFF",
+                                "High Astaxanthin plasmin"="#7CAE00"))
+#edav
+newpanel1plot %>% vascr_subset(sampleid = c(5,13,29)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()+
+  xlim(-3,24) +ylim(0.8,1.5)
 
++scale_color_manual(values=c("vehicle"= "#00BFC4",
+                                                         "plasmin"= "#F8766D",
+                                                         "High Astaxanthin vehicle"="#C77CFF",
+                                                         "High Astaxanthin plasmin"="#7CAE00"))+
+  scale_fill_manual(values = c( "vehicle"= "#00BFC4",
+                                "plasmin"= "#F8766D",
+                                "High Astaxanthin vehicle"="#C77CFF",
+                                "High Astaxanthin plasmin"="#7CAE00"))
 
+# second run
 
 newpanel2 <- vascr_import("ECIS",
                           raw = "Drugscreen_panel_II_badplasmineffect/ECIS_251121_MFT_CG_drugscreenII_3.abp",
