@@ -74,9 +74,7 @@ newpanel1plot %>% vascr_subset(sampleid = c(21:22, 29:30)) %>% vascr_summarise(l
                                 "High Astaxanthin plasmin"="#7CAE00"))
 #edav
 newpanel1plot %>% vascr_subset(sampleid = c(5,13,29)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()+
-  xlim(-3,24) +ylim(0.8,1.5)
-
-+scale_color_manual(values=c("vehicle"= "#00BFC4",
+  xlim(-3,24) +ylim(0.8,1.5)+scale_color_manual(values=c("vehicle"= "#00BFC4",
                                                          "plasmin"= "#F8766D",
                                                          "High Astaxanthin vehicle"="#C77CFF",
                                                          "High Astaxanthin plasmin"="#7CAE00"))+

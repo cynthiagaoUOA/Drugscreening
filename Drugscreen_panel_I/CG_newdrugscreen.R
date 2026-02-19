@@ -289,14 +289,17 @@ alldrugscreendata<- vascr_combine(screen1plotdata, screen2plotdata, screen3plotd
 #subsetted by high and low concentrations because of missing data problem. Use as separate plots or redo an experiment. For paper n=2 is okay, for thesis redo once or use do separate high and low conc plots. If can frame as high then low then low low then could get away with it. ALl about framing.
 
 #rapamycin high conc
-alldrugscreendata %>%  vascr_subset(experiment=c("1","2","3"),
+rapahigh<- alldrugscreendata %>%  vascr_subset(experiment=c("1","2","3"),
                                     sampleid = c(1,3, 25, 26)) %>% vascr_summarise(level = "summary") %>%
   vascr_plot_line()+ylim(0.55,1.15)
 
 #rapamycin low conc
-alldrugscreendata %>%  vascr_subset(experiment=c("2","3","4"),
+rapalow<- alldrugscreendata %>%  vascr_subset(experiment=c("2","3","4"),
                                     sampleid = c(2,4, 25, 26)) %>% vascr_summarise(level = "summary") %>%
   vascr_plot_line()+ylim(0.55,1.15)
+
+
+
 
 #dipyridamole high
 alldrugscreendata  %>%  vascr_subset(experiment=c("1","2","3"),
@@ -325,9 +328,8 @@ alldrugscreendata %>%  vascr_subset(experiment=c("1","5"),
 
 
 #vorapaxar
-alldrugscreendata  %>%  vascr_subset(experiment=c("1","2","3","5"),
-                                     sampleid = c(13,15, 25, 26)) %>% vascr_summarise(level = "experiment") %>% vascr_plot_line() + 
-  facet_wrap(~Experiment)
+alldrugscreendata  %>%  vascr_subset(experiment=c("1","2","3"),
+                                     sampleid = c(13,15, 25, 26)) %>% vascr_summarise(level = "summary") %>% vascr_plot_line() 
 
 alldrugscreendata  %>%  vascr_subset(experiment=c("2","3","4","5"),
                                                   sampleid = c(14,16, 25, 26)) %>% vascr_summarise(level = "experiment") %>% 
@@ -376,8 +378,8 @@ alldrugscreendata  %>%  vascr_subset(experiment=c("2"),sampleid = c(29,27, 25, 2
 
 # catalase
 
-alldrugscreendata  %>%  vascr_subset(experiment="5",sampleid = c(109:112, 25, 26), time = c(-5,20)) %>% vascr_summarise(level = "experiment") %>%
-  vascr_plot_line()+facet_wrap(~Experiment)
+alldrugscreendata  %>%  vascr_subset(experiment="4",sampleid = c(105:108, 25, 26), time = c(-5,20)) %>% vascr_summarise(level = "experiment") %>%
+  vascr_plot_line()+ylim(0.5, 1.3)
 
 # Need to keep in mind the missing data problem, ie. only include data from full datasets in one graph. Can't select from different repeats. 
 # Makes things tricky.. 

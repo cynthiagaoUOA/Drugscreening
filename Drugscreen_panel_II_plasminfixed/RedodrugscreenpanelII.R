@@ -59,15 +59,17 @@ panelIIredo1plot<- panelIIredo1labeled %>%
 #VPA
 panelIIredo1plot %>% vascr_subset(sampleid = c(1:4, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
 
-panelIIredo1plot %>% vascr_subset(sampleid = c(3,4, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line() +
-  xlim(-3,20) +ylim(0.5,1.3)+scale_color_manual(values=c("vehicle"= "#00BFC4",
-                                                        "plasmin"= "#F8766D",
-                                                        "high valproic acid vehicle"="#C77CFF",
-                                                        "high valproic acid plasmin"="#7CAE00"))+
-  scale_fill_manual(values = c( "vehicle"= "#00BFC4",
-                                "plasmin"= "#F8766D",
-                                "high valproic acid vehicle"="#C77CFF",
-                                "high valproic acid plasmin"="#7CAE00"))
+# figure for grant
+
+# panelIIredo1plot %>% vascr_subset(sampleid = c(3,4, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line() +
+#   xlim(-3,20) +ylim(0.5,1.3)+scale_color_manual(values=c("vehicle"= "#00BFC4",
+#                                                         "plasmin"= "#F8766D",
+#                                                         "high valproic acid vehicle"="#C77CFF",
+#                                                         "high valproic acid plasmin"="#7CAE00"))+
+#   scale_fill_manual(values = c( "vehicle"= "#00BFC4",
+#                                 "plasmin"= "#F8766D",
+#                                 "high valproic acid vehicle"="#C77CFF",
+#                                 "high valproic acid plasmin"="#7CAE00"))
 
 #butyl
 panelIIredo1plot %>% vascr_subset(sampleid = c(5:8, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
@@ -79,7 +81,7 @@ panelIIredo1plot %>% vascr_subset(sampleid = c(9:12, 30,31)) %>% vascr_summarise
 panelIIredo1plot %>% vascr_subset(sampleid = c(13:16, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
 
 #glutathione
-panelIIredo1plot %>% vascr_subset(sampleid = c(17:20, 31,33)) %>% vascr_summarise(level="experiment") %>% refactor()vascr_plot_line()
+panelIIredo1plot %>% vascr_subset(sampleid = c(17:20, 32,33)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
 
 
 glutfigrefactor<- panelIIredo1plot %>% vascr_subset(sampleid = c(17:20, 31,33)) %>% 
@@ -87,17 +89,77 @@ glutfigrefactor<- panelIIredo1plot %>% vascr_subset(sampleid = c(17:20, 31,33)) 
   
  
 
-panelIIredo1plot %>% vascr_subset(sampleid = c(19,20, 32,33)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()+
-  xlim(-3,20)+ylim(0.5,1.3) + scale_color_manual(values=c("glutathione vehicle"= "#00BFC4",
-                                                          "glutathione plasmin"= "#F8766D",
-                                                          "high glutathione vehicle"="#C77CFF",
-                                                          "high glutathione plasmin"="#7CAE00"))+
-  scale_fill_manual(values = c( "glutathione vehicle"= "#00BFC4",
-"glutathione plasmin"= "#F8766D",
-"high glutathione vehicle"="#C77CFF",
-"high glutathione plasmin"="#7CAE00"))
+# figure for grant
+  
+#   panelIIredo1plot %>% vascr_subset(sampleid = c(19,20, 32,33)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()+
+#   xlim(-3,20)+ylim(0.5,1.3) + scale_color_manual(values=c("glutathione vehicle"= "#00BFC4",
+#                                                           "glutathione plasmin"= "#F8766D",
+#                                                           "high glutathione vehicle"="#C77CFF",
+#                                                           "high glutathione plasmin"="#7CAE00"))+
+#   scale_fill_manual(values = c( "glutathione vehicle"= "#00BFC4",
+# "glutathione plasmin"= "#F8766D",
+# "high glutathione vehicle"="#C77CFF",
+# "high glutathione plasmin"="#7CAE00"))
 
 
 
 #insulin
 panelIIredo1plot %>% vascr_subset(sampleid = c(21:24, 30,31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line() 
+
+
+# Run 2 -------------------------------------------------------------------
+
+panelIIredo2<- vascr_import("ECIS", raw = "Drugscreen_panel_II_plasminfixed/ECIS_260126_MFT_1_CG_drugscreenIIredo2.abp",
+                            model ="Drugscreen_panel_II_plasminfixed/ECIS_260126_MFT_1_CG_drugscreenIIredo2_RbA.csv",
+                            experiment= "Exp2")
+#filename does not match experiment because I changed plans
+
+panelIIredo2key = tribble(~SampleID, ~Row, ~ Column, ~ Sample,
+                          
+                          1, "E", "10 11 12", "low valproic acid vehicle",
+                          2, "F", "10 11 12", "low valproic acid plasmin", 
+                          3, "G", "10 11 12", "high valproic acid vehicle",
+                          4, "H", "10 11 12", "high valproic acid plasmin",
+                          
+                          5, "E", "1 2 3", "low butylphthalide vehicle",
+                          6, "F", "1 2 3", "low butylphthalide plasmin",
+                          7, "G", "1 2 3", "high butylphthalide vehicle",
+                          8, "H", "1 2", "high butylphthalide plasmin", 8, "D", "3", "high butylphthalide plasmin",#H3 no connection moved to spare
+                          
+                          9, "A", "7 8 9", "low SB290572 vehicle",
+                          10, "B", "7 8", "low SB290572 plasmin", 10, "D", "2", "low SB290572 plasmin", #bad connection, moved
+                          11, "C", "7 8 9", "high SB290572 vehicle",
+                          12, "D", "7 8 9", "high SB290572 plasmin",
+                          
+                          13, "A", "11 12", "low marimastat vehicle", 13, "D", "1", "low marimastat vehicle", #bad connection, moved
+                          14, "B", "10 11 12", "low marimastat plasmin",
+                          15, "C", "10 11 12", "high marimastat vehicle",
+                          16, "D", "10 11 12", "high marimastat plasmin",
+                          
+                          17, "A", "4 5 6", "low glutathione vehicle",
+                          18, "B", "4 5 6", "low glutathione plasmin",
+                          19, "C", "4 5 6", "high glutathione vehicle",
+                          20, "D", "4 5 6", "high glutathione plasmin",
+                          
+                          21, "E", "4 5 6", "low insulin vehicle",
+                          22, "F", "4 5 6", "low insulin plasmin", 
+                          23, "G", "4 5 6", "high insulin vehicle",
+                          24, "H", "4 5 6", "high insulin plasmin",
+                          
+                          30, "E", "7 8 9", "vehicle", 
+                          31, "F", "7 8 9", "plasmin", 
+                          
+                          32, "G", "7 8 9", "glutathione vehicle",
+                          33, "H", "7 8 9", "glutathione plasmin")
+
+panelIIredo2labeled = vascr:::vascr_apply_map(panelIIredo2, panelIIredo2key)
+
+panelIIredo2plot<- panelIIredo2labeled %>% 
+  vascr_subset(unit = "Rb") %>% 
+  vascr_zero_time(71.49) %>% 
+  vascr_subset(time = c(-5, 24)) %>% 
+  vascr_normalise(-2, divide=FALSE) %>% 
+  vascr_resample_time(500) 
+
+panelIIredo2plot %>% vascr_subset(sampleid = c(21:24, 30, 31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
+
