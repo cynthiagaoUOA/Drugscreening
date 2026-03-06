@@ -3,7 +3,7 @@ library(tidyverse)
 library(vascr)
 library(ggplot2)
 
-# n=2, high and low -------------------------------------------------------
+# n=2, panel I high and low -------------------------------------------------------
 drugscreen2 <- vascr_import("ECIS",
                             raw = "Drugscreen_panel_I/ECIS_250925_MFT_1_CG_drugscreen2.abp",
                             model = "Drugscreen_panel_I/ECIS_250925_MFT_1_CG_drugscreen2_RbA.csv", experiment = "exp2"
@@ -146,9 +146,9 @@ vehiclelayer<- facetteddrugdf %>% filter(drug=="vehicle") %>%
 
 ggplot()+
   geom_line(data= vehiclelayer, aes(x=Time, y=Value), color="darkgrey")+  #base layer of vehicle line/ribbon
-  geom_ribbon(data=vehiclelayer, aes(x=Time, ymax=max, ymin=min), alpha=0.3)+
+  geom_ribbon(data=vehiclelayer, aes(x=Time, ymax=Value+sd, ymin=Value-sd), alpha=0.3)+
   geom_line(data= drugsnovehicle, mapping= aes(x=Time, y=Value, color=concentration))+  
-  geom_ribbon(data=drugsnovehicle, mapping= aes(x= Time, ymax=max, ymin=min, fill=concentration), alpha=0.4)+
+  geom_ribbon(data=drugsnovehicle, mapping= aes(x= Time, ymax=Value+sd, ymin=Value-sd, fill=concentration), alpha=0.4)+
   facet_wrap(~drug) + theme_bw()
 
 
@@ -220,7 +220,38 @@ panelIIbetter1<- vascr_import("ECIS", raw = "Drugscreen_panel_II_plasminfixed/EC
                             experiment= "Exp1")
 #filename does not match experiment because I changed plans
 
-# panel II good plasmin good cells ----------------------------------------
+# panel II good plasmin good cells, combine with one of the bad plasmin runs for n=2 ----------------------------------------
+
+panelIIbadplasminrun3<- vascr_import("ECIS",
+                         raw = "Drugscreen_panel_II_badplasmineffect/ECIS_251130_MFT_1CG_drugscreenII_4.abp",
+                         model = "Drugscreen_panel_II_badplasmineffect/ECIS_251130_MFT_1CG_drugscreenII_4_RbA.csv", experiment = "exp3")
+
+panelIIbadplasminrun3key <- tribble(
+  ~SampleID, ~Row, ~Column, ~Sample,
+15, "F", "1 2 3",  "high marimastat vehicle",
+13, "F", "7 8 9", "low marimastat vehicle",
+
+3, "B", "1 2 3", "high valproicacid vehicle", 
+1, "B", "7 8 9", "low valproicacid vehicle",
+
+
+11, "G", "1 2 3", "high SB290572 vehicle",
+9, "G", "7 8 9", "low SB290572 vehicle",
+
+
+7, "D", "1 2 3", "high butylphthalide vehicle",
+5, "D", "7 8 9", "low butylphthalide vehicle",
+
+31, "H", "4 5 6", "plasmin", 
+30, "H", "7 8 9", "vehicle")
+
+
+panelIIbadplasminrun3labeled <- vascr:::vascr_apply_map(panelIIbadplasminrun3, panelIIbadplasminrun3key)
+
+panelIIbadplasminrun3plot <- panelIIbadplasminrun3labeled %>%
+  vascr_zero_time(63.693) %>%
+  vascr_normalise(-2, divide = TRUE)
+
 
 panelIIbetter1key = tribble(~SampleID, ~Row, ~ Column, ~ Sample,
                             
@@ -261,12 +292,22 @@ panelIIbetter1plot<- panelIIbetter1labeled %>%
   vascr_normalise(-2, divide=TRUE) %>% 
   vascr_resample_time(500) 
 
-gridplot(panelIIbetter1plot, samples=c(1:24), vehicle= vehicle)
+
+
+gridplot(panelIIbetter1plot, samples=c(1:30), vehicle= vehicle)
 
 
 
 run1<- gridplotCG(drugdata= panelIIbetter1plot, samples= c(1:24, 30,31), vehicle= "vehicle") +ylim(0.5, 1.2)
 run1
+
+
+tworepspanelIIforpaper<- rbind(panelIIbetter1plot, panelIIbadplasminrun3plot) %>%   vascr_subset(unit = "Rb") %>% 
+  vascr_resample_time(500) %>% vascr_subset(time= c(-5,20))
+
+gridplotCG(tworepspanelIIforpaper, samples = 1:30, vehicle = "vehicle") +ylim(0.5, 1.3)
+
+
 
 # Grid function -----------------------------------------------------------
 
@@ -285,7 +326,7 @@ gridplotCG<- function(drugdata, samples, vehicle){ #argument sampleID as a vecto
     mutate(plasminorvehicle = word(drugdata$Sample, -1)) %>% 
     filter(plasminorvehicle=="vehicle") 
   
-  summariseddrugdata<- noplasmin %>% filter(SampleID %in% samples) %>% vascr_summarise(level="experiment")
+  summariseddrugdata<- noplasmin %>% filter(SampleID %in% samples) %>% vascr_summarise(level="summary")
   
   dissecteddf<- summariseddrugdata %>% 
     mutate(drug=word(summariseddrugdata$Sample, 2)) %>% #drug for vehicle will be NA
@@ -302,8 +343,8 @@ gridplotCG<- function(drugdata, samples, vehicle){ #argument sampleID as a vecto
 #plotting
   ggplot()+
     geom_line(data= associatedvehicle, aes(x=Time, y=Value), color="darkgrey")+  #base layer of vehicle line/ribbon
-    geom_ribbon(data=associatedvehicle, aes(x=Time, ymax=max, ymin=min), alpha=0.3)+
+    geom_ribbon(data=associatedvehicle, aes(x=Time, ymax=Value+sd, ymin=Value-sd), alpha=0.3)+
     geom_line(data= drugonlydf, mapping= aes(x=Time, y=Value, color=concentration))+  
-    geom_ribbon(data=drugonlydf, mapping= aes(x= Time, ymax=max, ymin=min, fill=concentration), alpha=0.4)+
+    geom_ribbon(data=drugonlydf, mapping= aes(x= Time, ymax=Value+sd, ymin=Value-sd, fill=concentration), alpha=0.4)+
     facet_wrap(~drug) + theme_bw()
 }
