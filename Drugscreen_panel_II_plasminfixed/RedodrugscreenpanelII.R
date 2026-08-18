@@ -158,8 +158,14 @@ panelIIredo2plot<- panelIIredo2labeled %>%
   vascr_subset(unit = "Rb") %>% 
   vascr_zero_time(71.49) %>% 
   vascr_subset(time = c(-5, 24)) %>% 
-  vascr_normalise(-2, divide=FALSE) %>% 
+  vascr_normalise(-2, divide=TRUE) %>% 
   vascr_resample_time(500) 
 
 panelIIredo2plot %>% vascr_subset(sampleid = c(21:24, 30, 31)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
 
+
+# Revisit -----------------------------------------------------------------
+
+tworuns<- vascr_combine(panelIIredo1plot, panelIIredo2plot)
+
+tworuns %>% vascr_subset(sampleid = c(30, 31, 1:4)) %>% vascr_summarise(level="experiment") %>% vascr_plot_line()
